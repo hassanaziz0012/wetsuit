@@ -149,6 +149,7 @@ https://templatemo.com/tm-561-purple-buzz
                     <div class="form-floating">
                         <input type="text" class="form-control form-control-lg light-300" id="gender" gender="gender" placeholder="Gender">
                         <label for="gender light-300">Gender</label>
+                        <p id="genderErrorMsg" class="text-danger"></p>
                     </div>
                 </div><!-- End Input Name -->
 
@@ -174,10 +175,16 @@ https://templatemo.com/tm-561-purple-buzz
                 </div><!-- End Input Company Name -->
 
                 <div class="col-md-12 col-12 m-auto text-end">
-                    <button type="submit" class="btn btn-secondary rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Find your ideal Wetsuit</button>
+                    <button type="button" class="btn btn-secondary rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300" onclick="getValidWetsuits()">Find your ideal Wetsuit</button>
                 </div>
 
             </form>
+
+            <div class="bg-light mt-5 d-flex flex-column align-items-center p-5">
+                <h1>Results</h1>
+                <p>You can wear the following suits:</p>
+                <ul id="resultsList"></ul>
+            </div>
         </div>
         <!-- End Contact Form -->
         <!-- <div class="row gx-5 gx-sm-3 gx-lg-5 gy-lg-5 gy-3 pb-3 projects">
@@ -509,6 +516,56 @@ https://templatemo.com/tm-561-purple-buzz
 
     </footer>
     <!-- End Footer -->
+
+    <!-- Wetsuit Finder Script -->
+    <script>
+        function getValidWetsuits () {
+            console.log("Validating data...");
+
+            const gender = String(document.getElementById('gender').value)
+            const height = document.getElementById('height').value
+            const chest = document.getElementById('chest').value
+            const waist = document.getElementById('waist').value
+
+            let fetch_data = true;
+            const validGenders = ["Men", "Women", "Junior"]
+            const genderErrorMsg = document.getElementById('genderErrorMsg');
+            if (validGenders.indexOf(gender) === -1) {
+                console.log(gender)
+                fetch_data = false;
+                genderErrorMsg.innerHTML = "You have entered an invalid Gender value. Possible values are: Men, Women, or Junior."
+            }
+            
+            if (fetch_data) {
+                genderErrorMsg.innerHTML = ""
+                console.log("Fetching data from server...");
+
+                var formdata = new FormData();
+                formdata.append("gender", gender);
+                formdata.append("height", height);
+                formdata.append("chest", chest);
+                formdata.append("waist", waist);
+
+                var requestOptions = {
+                method: 'POST',
+                body: formdata,
+                redirect: 'follow'
+                };
+
+                fetch("https://wetsuit-calculator.herokuapp.com/", requestOptions)
+                .then(response => response.text())
+                .then(result => handleResult(result))
+                .catch(error => console.log('error', error));
+            }
+        }
+
+        function handleResult (result) {
+            console.log(result);
+            const resultsList = document.getElementById('resultsList')
+            resultsList.innerHTML = result;
+            
+        }
+    </script>
 
 
     <!-- Bootstrap -->
