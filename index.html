@@ -147,9 +147,11 @@ https://templatemo.com/tm-561-purple-buzz
 
                 <div class="col-lg-6 mb-4">
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg light-300" id="gender" gender="gender" placeholder="Gender">
-                        <label for="gender light-300">Gender</label>
-                        <p id="genderErrorMsg" class="text-danger"></p>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="Men" selected>Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Junior">Junior</option>
+                          </select>
                     </div>
                 </div><!-- End Input Name -->
 
@@ -183,7 +185,20 @@ https://templatemo.com/tm-561-purple-buzz
             <div class="bg-light mt-5 d-flex flex-column align-items-center p-5">
                 <h1>Results</h1>
                 <p>You can wear the following suits:</p>
-                <ul id="resultsList"></ul>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Suit</th>
+                            <th scope="col">Height</th>
+                            <th scope="col">Chest</th>
+                            <th scope="col">Waist</th>
+                            <th scope="col">Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsList">
+                        
+                    </tbody>
+                    </table>
             </div>
         </div>
         <!-- End Contact Form -->
