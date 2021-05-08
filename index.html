@@ -160,6 +160,7 @@ https://templatemo.com/tm-561-purple-buzz
                     <div class="form-floating">
                         <input type="text" class="form-control form-control-lg light-300" id="height" name="height" placeholder="Height">
                         <label for="height light-300">Height</label>
+                        <p id="heightErrorMsg" class="text-danger"></p>
                     </div>
                 </div><!-- End Input Email -->
 
@@ -167,6 +168,7 @@ https://templatemo.com/tm-561-purple-buzz
                     <div class="form-floating">
                         <input type="text" class="form-control form-control-lg light-300" id="chest" name="chest" placeholder="Chest">
                         <label for="chest light-300">Chest</label>
+                        <p id="chestErrorMsg" class="text-danger"></p>
                     </div>
                 </div><!-- End Input Phone -->
 
@@ -174,6 +176,7 @@ https://templatemo.com/tm-561-purple-buzz
                     <div class="form-floating">
                         <input type="text" class="form-control form-control-lg light-300" id="waist" name="waist" placeholder="Waist">
                         <label for="waist light-300">Waist</label>
+                        <p id="waistErrorMsg" class="text-danger"></p>
                     </div>
                 </div><!-- End Input Company Name -->
 
@@ -539,10 +542,7 @@ https://templatemo.com/tm-561-purple-buzz
     <!-- Wetsuit Finder Script -->
     <script>
         function getValidWetsuits () {
-            const calculateBtn = document.getElementById("calculateBtn")
-            const calculateSpinner = document.getElementById("calculateSpinner")
-            calculateBtn.classList.add("d-none")
-            calculateSpinner.classList.remove("d-none")
+            
 
             console.log("Validating data...");
 
@@ -551,17 +551,20 @@ https://templatemo.com/tm-561-purple-buzz
             const chest = document.getElementById('chest').value
             const waist = document.getElementById('waist').value
 
-            let fetch_data = true;
-            const validGenders = ["Men", "Women", "Junior"]
-            const genderErrorMsg = document.getElementById('genderErrorMsg');
-            if (validGenders.indexOf(gender) === -1) {
-                console.log(gender)
-                fetch_data = false;
-                genderErrorMsg.innerHTML = "You have entered an invalid Gender value. Possible values are: Men, Women, or Junior."
-            }
+            let fetch_data = validateData(gender, height, chest, waist);
             
             if (fetch_data) {
+                const calculateBtn = document.getElementById("calculateBtn")
+                const calculateSpinner = document.getElementById("calculateSpinner")
+                calculateBtn.classList.add("d-none")
+                calculateSpinner.classList.remove("d-none")
+
+                // Resetting error messages
                 genderErrorMsg.innerHTML = ""
+                // heightErrorMsg.innerHTML = ""
+                // chestErrorMsg.innerHTML = ""
+                // waistErrorMsg.innerHTML = ""
+
                 console.log("Fetching data from server...");
 
                 var formdata = new FormData();
@@ -583,13 +586,56 @@ https://templatemo.com/tm-561-purple-buzz
             }
         }
 
+        function validateData(gender, height, chest, waist) {
+            // Gender Validation
+            const validGenders = ["Men", "Women", "Junior"]
+            const genderErrorMsg = document.getElementById('genderErrorMsg');
+            if (validGenders.indexOf(gender) === -1) {
+                console.log(gender)
+                genderErrorMsg.innerHTML = "You have entered an invalid Gender value. Possible values are: Men, Women, or Junior."
+                return false
+            }
+            // Height / Chest / Waist Validation
+            if (!isInt(height) || height < 0 || height > 220 || height === '') {
+                const heightErrorMsg = document.getElementById("heightErrorMsg")
+                heightErrorMsg.innerHTML = "Please enter a whole number between 0 and 220."
+                return false
+            } else {
+                heightErrorMsg.innerHTML = ""
+            }
+            if (!isInt(chest) || chest < 0 || chest > 220 || chest === '') {
+                const chestErrorMsg = document.getElementById("chestErrorMsg")
+                chestErrorMsg.innerHTML = "Please enter a whole number between 0 and 220."
+                return false
+            } else {
+                chestErrorMsg.innerHTML = ""
+            }
+            if (!isInt(waist) || waist < 0 || waist > 220 || waist === '') {
+                const waistErrorMsg = document.getElementById("waistErrorMsg")
+                waistErrorMsg.innerHTML = "Please enter a whole number between 0 and 220."
+                return false
+            } else {
+                waistErrorMsg.innerHTML = ""
+            }
+            
+            return true
+        }
+
         function handleResult (result) {
             calculateBtn.classList.remove("d-none")
             calculateSpinner.classList.add("d-none")
             console.log(result);
             const resultsList = document.getElementById('resultsList')
-            resultsList.innerHTML = result;
+            if (result !== '') {
+                resultsList.innerHTML = result;
+            } else {
+                resultsList.innerHTML = "<h4>No results found for that data.</h4>"
+            }
             
+        }
+
+        function isInt(n) {
+            return n % 1 === 0;
         }
     </script>
 
