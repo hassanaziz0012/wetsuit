@@ -177,8 +177,11 @@ https://templatemo.com/tm-561-purple-buzz
                     </div>
                 </div><!-- End Input Company Name -->
 
-                <div class="col-md-12 col-12 m-auto text-end">
-                    <button type="button" class="btn btn-secondary rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300" onclick="getValidWetsuits()">Find your ideal Wetsuit</button>
+                <div class="col-md-12 col-12 m-auto text-end d-flex align-items-center justify-content-end">
+                    <button id="calculateBtn" type="button" class="btn btn-secondary rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300" onclick="getValidWetsuits()">Find your ideal Wetsuit</button>
+                    <div id="calculateSpinner" class="spinner-border text-primary d-none" role="status">
+                        <span class="sr-only"></span>
+                    </div>
                 </div>
 
             </form>
@@ -536,6 +539,11 @@ https://templatemo.com/tm-561-purple-buzz
     <!-- Wetsuit Finder Script -->
     <script>
         function getValidWetsuits () {
+            const calculateBtn = document.getElementById("calculateBtn")
+            const calculateSpinner = document.getElementById("calculateSpinner")
+            calculateBtn.classList.add("d-none")
+            calculateSpinner.classList.remove("d-none")
+
             console.log("Validating data...");
 
             const gender = String(document.getElementById('gender').value)
@@ -576,6 +584,8 @@ https://templatemo.com/tm-561-purple-buzz
         }
 
         function handleResult (result) {
+            calculateBtn.classList.remove("d-none")
+            calculateSpinner.classList.add("d-none")
             console.log(result);
             const resultsList = document.getElementById('resultsList')
             resultsList.innerHTML = result;
